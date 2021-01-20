@@ -291,3 +291,268 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 #3.7
 ggplot(data = diamonds) + 
   geom_bar(mapping = aes(x = cut))
+
+ggplot(data = diamonds) + 
+  stat_count(mapping = aes(x = cut))
+
+demo <- tribble(
+  ~cut,         ~freq,
+  "Fair",       1610,
+  "Good",       4906,
+  "Very Good",  12082,
+  "Premium",    13791,
+  "Ideal",      21551
+)
+
+ggplot(data = demo) +
+  geom_bar(mapping = aes(x = cut, y = freq), stat = "identity")
+
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = stat(prop), group = 1))
+
+
+ggplot(data = diamonds) + 
+  stat_summary(
+    mapping = aes(x = cut, y = depth),
+    fun.min = min,
+    fun.max = max,
+    fun = median
+  )
+
+
+#3.7.1
+
+
+
+
+#5
+library(tidyverse)
+library(nycflights13)
+
+data(flights)
+flights
+class(flights)
+
+
+jan1 <- flights %>% 
+  filter(month == 1 & day == 1)
+
+
+dec25 <- flights %>% 
+  filter(month == 12 & day == 25)
+
+#1월
+ggjan1 <- ggplot(jan1, aes(x = dep_delay)) +
+  geom_histogram()
+
+#12월
+ggdec25 <- dec12 %>% 
+  ggplot(aes(x = dep_delay)) +
+  geom_histogram()
+
+apr1 <- flights %>% 
+  filter(month == 4, day == 1)
+#4월
+ggapr1 <- apr1 %>% 
+  ggplot(aes(x = dep_delay)) +
+  geom_histogram()
+
+
+install.packages("egg")
+library(egg)
+
+ggarrange(ggjan1,
+          ggdec25,
+          ggapr1)
+
+
+arr_deray
+
+ggjan1_2 <- jan1 %>% 
+  ggplot(aes(x = arr_delay)) +
+  geom_histogram()
+
+ggdec25_2 <- dec25 %>% 
+  ggplot(aes(x = arr_delay)) +
+  geom_histogram()
+
+ggapr1_2 <- apr1 %>% 
+  ggplot(aes(x = arr_delay)) +
+  geom_histogram()
+
+
+ggarrange(ggjan1_2,
+          ggdec25_2,
+          ggapr1_2)
+
+
+
+month <- flights %>% 
+  filter(month == 1 | month == 4 | month == 12)
+
+dep120 <= 
+ arr120 <=
+  
+  
+flights %>% 
+  filter(arr_delay <= 120,
+         dep_delay <= 120)
+
+
+#도착이 2시간 연착 출발은 안 늦음
+flights %>% 
+  filter(arr_delay >= 120,
+         dep_delay <= 0)
+
+flights %>% 
+  arrange(-arr_delay, -dep_delay)
+
+
+flights %>% 
+  select(year, month, day)
+
+flights %>% 
+  select(-distance:-time_hour)
+
+flights %>% 
+  select(chulbalsigan = dep_time,
+         yesansigan = sched_dep_time)
+
+#셀렉트로 변수 우선순위 설정
+flights %>% 
+  select(dest:air_time, everything())
+
+#내가 보고자 하는 단어
+flights %>% 
+  select(ends_with("delay"))
+
+flights %>% 
+  select(starts_with("arr"))
+
+flights %>% 
+  select(starts_with("sched"))
+
+
+
+#5,5
+flights_sml <- select(flights, 
+                      year:day, 
+                      ends_with("delay"), 
+                      distance, 
+                      air_time)
+
+flights_sml %>% 
+  mutate(gain = dep_delay - arr_delay,
+         speed = distance / air_time)
+
+
+
+
+#체공시간  airtime2(도착시간 - 출발시간)
+flights %>% 
+  mutate(air_time_2 = arr_time - dep_time) %>% 
+  select(air_time, air_time_2)
+
+#조건문 ifelse arr이 크면 트루
+fflights_sml %>% 
+  mutate(ind = ifelse(arr_delay > dep_delay, TRUE,
+                      FALSE))
+  
+#논리연산자
+flights_sml %>% 
+  mutate(ind = arr_delay > dep_delay) %>% 
+  filter(ind)
+
+flights_sml %>% 
+  filter(!(arr_delay > dep_delay))
+
+#5.2.4
+#1
+flights %>% 
+  filter(arr_delay >= 120)
+#2
+flights %>% 
+  filter(dest == "IAH", dest ==  "HOU")
+
+#3
+flights %>% 
+  filter(carrier == "UA", carrier == "DL")
+
+#4
+flights %>% 
+  filter(month == 7 | month == 8 | month == 9)
+#5
+flights %>% 
+  filter(arr_delay >= 120,
+         dep_delay <= 0)
+#6
+flights %>% 
+  filter(arr_delay >= 60,
+         dep_delay >= 60,
+         air_time >= 30)
+#7
+arrtime
+flights %>% 
+  filter(dep_time == 2400 |
+         dep_time <= 600)
+
+#5.2.4.2
+table(is.na(flights$dep_time))
+
+#5.3.1
+#-, desc
+
+#5.3.1.2
+flights %>% 
+  arrange(-arr_delay)
+
+#5.3.1.3
+flights %>% 
+  arrange(-sched_dep_time)
+#5.3.1.4.
+flights %>% 
+  arrange(-distance)
+flights %>% 
+  arrange(distance)
+
+#5.4.1.1
+flights %>% 
+  select(c(dep_time, dep_delay, arr_time, arr_delay))
+
+#5.4.1.2
+flights %>% 
+  select(c(dep_time, dep_delay, arr_time, arr_delay))
+#5.4.1.3
+vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+
+flights %>% 
+  select(any_of(vars))
+#5.4.1.4
+#이름을 변경할 수 있다 
+
+
+mutate(flights_sml,
+       gain = dep_delay - arr_delay,
+       hours = air_time / 60,
+       gain_per_hour = gain / hours
+)
+
+
+#새로운 변수로만 만들 떄 transmute
+transmute(flights,
+          gain = dep_delay - arr_delay,
+          hours = air_time / 60,
+          gain_per_hour = gain / hours
+)
+
+
+
+
+
+
+
+
+
+
+rm(ggapr1, ggapr1_2, ggdec25,ggdec25_2, ggjan1, ggjan1_2)
